@@ -483,9 +483,20 @@
       h('button', { type: 'button', class: 'btn small', onclick: function () { state = {}; try { localStorage.removeItem(KEY); } catch (e) { } applyPrefs(); renderHome(); toast('저장된 생각을 모두 지웠어요.'); } }, icon('trash'), '모두 지우기'),
       h('button', { type: 'button', class: 'btn small ghost', onclick: function () { confirmBox.hidden = true; } }, '그만두기'));
     row.appendChild(h('button', { type: 'button', class: 'btn small', onclick: function () { confirmBox.hidden = false; } }, icon('trash'), '내 생각 지우기'));
-    row.appendChild(h('a', { class: 'btn small ghost', href: 'teacher.html' }, '선생님용 안내'));
+    row.appendChild(h('a', { class: 'btn small ghost', href: '#guide' }, '선생님용 안내'));
     foot.appendChild(row); foot.appendChild(confirmBox);
     main.appendChild(foot);
+    root.appendChild(main);
+  }
+  function renderGuide() {
+    document.title = '교사용 안내 · ' + BASE_TITLE;
+    var root = mount();
+    root.appendChild(h('header', { class: 'topbar' }, h('div', { class: 'wrap' },
+      h('a', { class: 'tb-btn', href: '#home' }, icon('map'), '지도'), h('div', { class: 'title' }, '교사용 안내'))));
+    var main = h('main', { class: 'wrap doc', id: 'main', tabindex: '-1' });
+    var tpl = document.getElementById('tpl-guide');
+    if (tpl && tpl.content) main.appendChild(tpl.content.cloneNode(true));
+    else main.appendChild(h('p', null, '안내를 불러오지 못했어요.'));
     root.appendChild(main);
   }
   var railButtons = [], current = null;
@@ -580,6 +591,7 @@
 
   /* ---------- 길 찾기 ---------- */
   function parseHash() {
+    if (location.hash === '#guide') return { view: 'guide' };
     var m = /^#(s\d)(?:-(\d+))?$/.exec(location.hash || '');
     var st = m && byId(m[1]);
     if (!st) return { view: 'home' };
@@ -588,12 +600,12 @@
   }
   var lastView = null;
   function route() {
-    var r = parseHash(), key = r.view === 'home' ? 'home' : r.st.id + '-' + r.step;
-    if (r.view === 'home') { current = null; renderHome(); } else renderStation(r.st, r.step);
+    var r = parseHash(), key = r.view === 'station' ? r.st.id + '-' + r.step : r.view;
+    if (r.view === 'home') { current = null; renderHome(); } else if (r.view === 'guide') { current = null; renderGuide(); } else renderStation(r.st, r.step);
     if (key !== lastView) {
       window.scrollTo(0, 0);
       if (lastView !== null) {
-        var t = document.getElementById(r.view === 'home' ? 'main' : 'step-title');
+        var t = document.getElementById(r.view === 'station' ? 'step-title' : 'main');
         if (t) { try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } }
       }
     }

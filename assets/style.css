@@ -250,6 +250,22 @@ details.ex .body { padding: 0 .9rem .8rem; display: grid; gap: .5rem; font-size:
 .toast { position: fixed; left: 50%; bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: .55rem 1rem; border-radius: 999px; font-size: .9rem; z-index: 20; max-width: calc(100% - 32px); }
 .confirm { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; background: var(--warn-bg); border-radius: 10px; padding: .5rem .75rem; }
 
+
+/* ---------- 선생님용 안내(#guide) ---------- */
+.doc { display: grid; gap: 1.6rem; padding-block: 1.5rem 3rem; }
+.doc section { display: grid; gap: .7rem; }
+.doc h1 { font-size: clamp(1.6rem, 4.6vw, 2.2rem); color: var(--plum); }
+.doc h2 { font-size: 1.35rem; color: var(--ink); border-bottom: 2px solid var(--rule); padding-bottom: .3rem; }
+.doc p, .doc li { max-width: 46rem; }
+.doc ul, .doc ol { margin: 0; padding-left: 1.2rem; display: grid; gap: .35rem; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; min-width: 46rem; font-size: .9rem; }
+th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid var(--rule); }
+th { background: var(--plum-soft); color: var(--ink); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td:first-child { white-space: nowrap; color: var(--plum); font-weight: 600; }
+.note-box { background: var(--hint-bg); color: var(--hint-ink); border-radius: 12px; padding: .8rem 1rem; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em; background: var(--plum-soft); padding: .05rem .35rem; border-radius: 5px; }
 @media (max-width: 560px) {
   .mixer { grid-template-columns: 1fr; }
   .mixer .plus { justify-self: center; }
