@@ -22,7 +22,7 @@
   function sumGet(key, name) {
     return function (ctx) { return ctx.val(key) || (ctx.val('problem') === name ? ctx.val('contrib') : ''); };
   }
-  function line(label, v) { return '<li><b>' + label + '</b> · ' + (v || '<span style="opacity:.7">아직 비어 있어요</span>') + '</li>'; }
+  function line(label, v) { return '<li><b>' + label + '</b> · ' + (v || '<em>아직 비어 있어요</em>') + '</li>'; }
 
   (window.APP_STATIONS = window.APP_STATIONS || []).push({
     id: 's2', num: 2, badge: '2', color: 'blue',

@@ -613,6 +613,6 @@
   }
   function applyPrefs() { document.documentElement.setAttribute('data-size', ui('size', '') === 'lg' ? 'lg' : 'md'); }
 
-  function boot() { injectSprite(); applyPrefs(); window.addEventListener('hashchange', route); route(); }
+  function boot() { document.documentElement.lang = 'ko'; injectSprite(); applyPrefs(); window.addEventListener('hashchange', route); route(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
