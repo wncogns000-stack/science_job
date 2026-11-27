@@ -2,7 +2,7 @@
 """index.html과 assets/ 안의 CSS·JS를 한 파일로 묶는다.
 
 사용법
-  python3 tools/build.py                   # dist/jinro-didimdol.html 만들기
+  python3 tools/build.py                   # dist/mirae-jobs-expo.html 만들기
   python3 tools/build.py --fragment 경로   # <html>, <head>, <body> 태그 없이 내용만 담은 파일도 만들기
 """
 import pathlib
@@ -10,7 +10,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-OUT = ROOT / "dist" / "jinro-didimdol.html"
+OUT = ROOT / "dist" / "mirae-jobs-expo.html"
 
 
 def bundle() -> str:

@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>미래 직업 박람회 2045</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="6학년 2학기 과학 4단원 과학과 나의 진로 · 미래 사회의 문제를 과학으로 해결하는 미래 직업 부스를 둘러보고, 탐구 미션으로 도장을 모으고, 나만의 미래 직업 카드를 만드는 사이트">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;600;700&family=Jua&display=swap">
+<style>
+/* 미래 직업 박람회 2045
+   레이아웃: 남색 박람회 간판(머리) 아래에 입장권과 2×2 존 지도, 존마다 줄무늬 차양을 단 부스 카드.
+   여권 도장과 입장권 같은 박람회 소품을 화면 요소로 쓴다. 존 색: 인구 산호, 환경 초록, 안전 남보라, 생활 황토. */
+:root {
+  --bg: #F1F5FB; --sheet: #FFFFFF; --ink: #0F1E3D; --ink-2: #4A5A78; --line: #D6DEEC;
+  --head: #13285A; --on-head: #FFFFFF; --head-2: #B9C8EC; --ticket: #FFD23F; --on-ticket: #13285A;
+  --btn: #13285A; --on-btn: #FFFFFF; --ok: #1B7A4B; --ok-bg: #DDF2E5; --no: #B3261E; --no-bg: #FCE4E1;
+  --pop: #C23A22; --pop-soft: #FDE6E0; --env: #1B7A4B; --env-soft: #DDF2E5;
+  --safe: #4A4FCF; --safe-soft: #E5E6FB; --life: #9A5B00; --life-soft: #FBEFD8; --on-z: #FFFFFF;
+  --shadow: 0 2px 4px rgba(15, 30, 61, .06), 0 10px 24px rgba(15, 30, 61, .08);
+  --f-disp: "Black Han Sans", "Jua", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-fun: "Jua", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1222; --sheet: #151E34; --ink: #EAF0FB; --ink-2: #A9B6CF; --line: #2A3756;
+    --head: #070C19; --on-head: #FFFFFF; --head-2: #9FB2DF; --ticket: #FFD23F; --on-ticket: #13285A;
+    --btn: #DCE6FF; --on-btn: #0C1222; --ok: #6FD49C; --ok-bg: #15301F; --no: #FF9A8C; --no-bg: #3A1B18;
+    --pop: #FF9A85; --pop-soft: #3A1E19; --env: #6FD49C; --env-soft: #15301F;
+    --safe: #AEB2FF; --safe-soft: #1F2147; --life: #F5BE62; --life-soft: #3A2A10; --on-z: #0C1222;
+    --shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 10px 24px rgba(0, 0, 0, .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1222; --sheet: #151E34; --ink: #EAF0FB; --ink-2: #A9B6CF; --line: #2A3756;
+  --head: #070C19; --on-head: #FFFFFF; --head-2: #9FB2DF; --ticket: #FFD23F; --on-ticket: #13285A;
+  --btn: #DCE6FF; --on-btn: #0C1222; --ok: #6FD49C; --ok-bg: #15301F; --no: #FF9A8C; --no-bg: #3A1B18;
+  --pop: #FF9A85; --pop-soft: #3A1E19; --env: #6FD49C; --env-soft: #15301F;
+  --safe: #AEB2FF; --safe-soft: #1F2147; --life: #F5BE62; --life-soft: #3A2A10; --on-z: #0C1222;
+  --shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 10px 24px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+.z-pop { --z: var(--pop); --zs: var(--pop-soft); }
+.z-env { --z: var(--env); --zs: var(--env-soft); }
+.z-safe { --z: var(--safe); --zs: var(--safe-soft); }
+.z-life { --z: var(--life); --zs: var(--life-soft); }
+[hidden] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); line-height: 1.65; word-break: keep-all; overflow-wrap: anywhere; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--head); }
+a { color: inherit; }
+button, select, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--ticket); outline-offset: 2px; border-radius: 6px; }
+#main:focus { outline: none; }
+h1, h2 { font-family: var(--f-disp); font-weight: 400; line-height: 1.25; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.8rem, 5.4vw, 3rem); }
+h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.narrow { max-width: 760px; }
+main { display: grid; gap: 1.4rem; padding-block: 1.4rem 2.5rem; }
+.sub { margin: 0; color: var(--ink-2); }
+.kicker { margin: 0; font-size: .85rem; letter-spacing: .06em; color: var(--ink-2); display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+/* 박람회 간판 */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--head); color: var(--on-head); }
+.topin { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding-block: .55rem; }
+.logo { display: inline-flex; align-items: baseline; gap: .45rem; text-decoration: none; }
+.logo .l1 { font-family: var(--f-disp); font-size: 1.3rem; }
+.logo .l2 { font-family: var(--f-fun); background: var(--ticket); color: var(--on-ticket); border-radius: 6px; padding: 0 .4rem; font-size: .95rem; }
+.mainnav { display: flex; gap: .2rem; flex-wrap: wrap; margin-left: auto; }
+.mainnav a { text-decoration: none; color: var(--head-2); padding: .3rem .65rem; border-radius: 999px; font-size: .92rem; white-space: nowrap; }
+.mainnav a:hover { color: var(--on-head); }
+.mainnav a[aria-current="page"] { background: rgba(255, 255, 255, .14); color: var(--on-head); }
+
+/* 버튼 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.75rem; padding: .5rem 1.15rem; border-radius: 999px; border: 2px solid var(--btn); background: var(--btn); color: var(--on-btn); font-weight: 600; text-decoration: none; cursor: pointer; }
+.btn:hover { filter: brightness(1.12); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.small { min-height: 2.2rem; padding: .25rem .8rem; font-size: .9rem; }
+.row, .next { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; margin: 0; }
+.next { justify-content: space-between; }
+
+/* 첫 화면 */
+.hero { display: grid; gap: .8rem; padding-block: 1rem .4rem; }
+.hero h1 { max-width: 18ch; }
+.lead { margin: 0; max-width: 44rem; font-size: 1.05rem; }
+.heroacts { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; margin-top: .3rem; }
+.ticket { display: inline-grid; grid-template-columns: auto auto; align-items: center; text-decoration: none; background: var(--ticket); color: var(--on-ticket); min-height: 3.2rem;
+  -webkit-mask: radial-gradient(circle at 0 50%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle at 0 50%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat; }
+.ticket .t1 { font-family: var(--f-fun); padding: .45rem .9rem .45rem 1.3rem; border-right: 2px dashed rgba(19, 40, 90, .45); }
+.ticket .t2 { font-weight: 700; padding: .45rem 1.3rem .45rem .9rem; }
+.ticket:hover { filter: brightness(1.05); }
+
+/* 존 지도 */
+.map { display: grid; gap: .6rem; scroll-margin-top: 4.5rem; }
+.zones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.zone { position: relative; display: grid; gap: .35rem; text-decoration: none; background: var(--sheet); border: 2px solid var(--line); border-radius: 18px; padding: 1.1rem 1.2rem 1rem; box-shadow: var(--shadow); overflow: hidden; }
+.zone::before { content: ""; position: absolute; inset: 0 0 auto; height: 8px; background: var(--z); }
+.zone:hover { border-color: var(--z); }
+.zicon { font-size: 2.2rem; line-height: 1; }
+.zt { font-family: var(--f-disp); font-size: 1.45rem; color: var(--z); }
+.zp { color: var(--ink-2); font-size: .95rem; }
+.zbar { display: block; height: 8px; border-radius: 4px; background: var(--zs); overflow: hidden; }
+.zbar i { display: block; height: 100%; background: var(--z); }
+.zc { font-size: .88rem; font-weight: 600; }
+
+/* 부스 카드 */
+.all { display: grid; gap: .7rem; }
+.filters { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: .5rem; }
+.search, .filters select, .fld input, .fld select, .fld textarea, .guide textarea, #savebox textarea { width: 100%; min-height: 2.75rem; border: 1.5px solid var(--line); border-radius: 12px; background: var(--sheet); padding: .45rem .8rem; }
+.booths { display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: 1rem; }
+.booth { position: relative; display: grid; gap: .35rem; align-content: start; text-decoration: none; background: var(--sheet); border: 1.5px solid var(--line); border-radius: 16px; padding: 0 1rem 1rem; box-shadow: var(--shadow); overflow: hidden; transition: transform .15s ease; }
+.booth:hover { transform: translateY(-3px); border-color: var(--z); }
+.awning { display: block; margin: 0 -1rem .3rem; height: 34px;
+  background: radial-gradient(circle at 50% 0, var(--z) 10px, transparent 10.5px) 0 22px / 22px 12px repeat-x, repeating-linear-gradient(90deg, var(--z) 0 22px, var(--zs) 22px 44px) 0 0 / 100% 22px no-repeat; }
+.booth .emoji { font-size: 2.3rem; line-height: 1.1; }
+.bname { font-family: var(--f-disp); font-size: 1.25rem; }
+.hook { color: var(--ink-2); font-size: .94rem; }
+.bmeta { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin-top: .2rem; }
+.zname { font-size: .8rem; color: var(--z); font-weight: 600; }
+.booth .why { font-size: .85rem; background: var(--zs); border-radius: 8px; padding: .25rem .55rem; }
+.pill { font-family: var(--f-fun); font-size: .82rem; border-radius: 999px; padding: .02rem .55rem; border: 1.5px solid currentColor; }
+.st-now { color: var(--ok); }
+.st-grow { color: var(--safe); }
+.st-imagine { color: var(--pop); }
+.stamp { position: absolute; top: 2.6rem; right: .8rem; width: 4.2rem; height: 4.2rem; border-radius: 50%; border: 4px double var(--z, var(--pop)); color: var(--z, var(--pop)); display: grid; place-items: center; font-family: var(--f-fun); font-size: 1.05rem; transform: rotate(-14deg); background: var(--sheet); opacity: .95; }
+.stamp.small { width: 3.2rem; height: 3.2rem; font-size: .85rem; border-width: 3px; }
+
+/* 존 입구 */
+.crumb { font-size: .88rem; color: var(--ink-2); }
+.crumb a { color: var(--ink-2); }
+.gate { position: relative; display: grid; gap: .7rem; background: var(--zs); border: 2px solid var(--z); border-radius: 20px; padding: 1.3rem 1.4rem; }
+.gate h1 { color: var(--z); }
+.gicon { font-size: 2.6rem; line-height: 1; }
+.flow { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; counter-reset: f; }
+.flow li { counter-increment: f; background: var(--sheet); border-radius: 14px; padding: .8rem .9rem; display: grid; gap: .25rem; position: relative; }
+.flow li b { font-family: var(--f-fun); font-weight: 400; color: var(--z); }
+.flow li b::before { content: counter(f) " "; }
+.flow li:not(:last-child)::after { content: "→"; position: absolute; right: -.62rem; top: 50%; transform: translateY(-50%); color: var(--z); font-weight: 700; }
+.book { margin: 0; font-size: .85rem; color: var(--ink-2); }
+
+/* 부스 안 */
+.jobhead { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.1rem; align-items: center; background: var(--sheet); border: 1.5px solid var(--line); border-radius: 20px; padding: 0 1.3rem 1.2rem; overflow: hidden; box-shadow: var(--shadow); }
+.jobhead .awning { grid-column: 1 / -1; margin: 0 -1.3rem; }
+.bigemoji { font-size: 4rem; line-height: 1; width: 6rem; height: 6rem; border-radius: 50%; background: var(--zs); display: grid; place-items: center; }
+.jt { display: grid; gap: .3rem; min-width: 0; }
+.hookq { margin: 0; font-size: 1.08rem; color: var(--ink-2); }
+.bookref { font-size: .8rem; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0 .45rem; }
+.jobgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.panel { background: var(--sheet); border: 1.5px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; display: grid; gap: .55rem; align-content: start; min-width: 0; }
+.panel h2 { font-size: 1.15rem; }
+.panel p { margin: 0; }
+.panel.wide { grid-column: 1 / -1; }
+.know { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .6rem; }
+.know li { display: grid; gap: .15rem; background: var(--bg); border-radius: 12px; padding: .6rem .75rem; }
+.know b { font-family: var(--f-fun); font-weight: 400; font-size: 1.05rem; }
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tag { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: .05rem .65rem; font-size: .9rem; }
+
+/* 도장 미션 */
+.mission { position: relative; display: grid; gap: .6rem; background: var(--sheet); border: 2.5px dashed var(--z, var(--line)); border-radius: 18px; padding: 1.1rem 1.2rem 1.2rem; }
+.mission h2 { font-size: 1.25rem; }
+.mission .sit { margin: 0; font-size: 1.05rem; padding-right: 4.5rem; }
+.mission p { margin: 0; }
+.opts { display: grid; gap: .5rem; }
+.opt { text-align: left; border: 2px solid var(--line); background: var(--bg); border-radius: 14px; padding: .7rem .9rem; cursor: pointer; line-height: 1.5; }
+.opt:hover { border-color: var(--ink-2); }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); }
+.opt.wrong { border-color: var(--no); background: var(--no-bg); }
+.fb { min-height: 1.4em; font-weight: 600; }
+.fb.ok { color: var(--ok); }
+.fb.no { color: var(--no); }
+.mission .stamp { top: 1rem; right: 1rem; }
+.mission.pop .stamp { animation: stampin .45s cubic-bezier(.2, 1.6, .4, 1) both; }
+@keyframes stampin { from { transform: rotate(-30deg) scale(2.2); opacity: 0; } to { transform: rotate(-14deg) scale(1); opacity: .95; } }
+
+/* 나에게 맞는 부스 */
+.dots { display: flex; gap: .4rem; margin: 0; }
+.dots span { width: .8rem; height: .8rem; border-radius: 50%; background: var(--line); }
+.dots span.on { background: var(--ink-2); }
+.dots span.cur { background: var(--ticket); outline: 2px solid var(--on-ticket); }
+.fq { font-size: 1.5rem; }
+.answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.ans { min-height: 4.2rem; border: 2px solid var(--line); background: var(--sheet); border-radius: 16px; font-size: 1.08rem; cursor: pointer; padding: .6rem .8rem; box-shadow: var(--shadow); }
+.ans:hover { border-color: var(--ink-2); transform: translateY(-2px); }
+.result { display: grid; gap: .3rem; }
+
+/* 여권 */
+.passhead { background: var(--head); color: var(--on-head); border-radius: 20px; padding: 1.3rem 1.4rem; display: grid; gap: .35rem; }
+.passhead .kicker, .passhead .sub { color: var(--head-2); }
+.badges { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: .6rem; }
+.badges li { display: grid; grid-template-columns: auto 1fr; column-gap: .55rem; align-items: center; background: var(--sheet); border: 1.5px solid var(--line); border-radius: 14px; padding: .55rem .75rem; color: var(--ink-2); }
+.badges li span:last-child { grid-column: 2; font-size: .82rem; }
+.badges li.got { color: var(--ink); border-color: var(--ticket); }
+.bi { grid-row: span 2; font-size: 1.6rem; color: var(--ticket); }
+.pzone { display: grid; gap: .6rem; }
+.pzone h2 { color: var(--z); font-size: 1.2rem; }
+.slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: .6rem; }
+.slot { display: grid; justify-items: center; gap: .3rem; text-decoration: none; text-align: center; background: var(--sheet); border: 2px dashed var(--line); border-radius: 16px; padding: .8rem .5rem; color: var(--ink-2); }
+.se { width: 3.6rem; height: 3.6rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.7rem; border: 3px dashed var(--line); }
+.slot.got { border-style: solid; border-color: var(--z); color: var(--ink); }
+.slot.got .se { border: 4px double var(--z); transform: rotate(-12deg); background: var(--zs); }
+.sn { font-size: .85rem; line-height: 1.35; }
+
+/* 부스 만들기 */
+.mixrow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; gap: .6rem; align-items: end; }
+.plus { font-family: var(--f-disp); font-size: 1.8rem; padding-bottom: .3rem; }
+.mixq { margin: 0; background: var(--bg); border-radius: 12px; padding: .65rem .85rem; }
+.fld { display: grid; gap: .3rem; }
+.fld > span { font-weight: 600; font-size: .95rem; }
+.fld textarea { min-height: 5.5rem; resize: vertical; }
+.emos { display: flex; flex-wrap: wrap; gap: .35rem; }
+.emo { width: 2.75rem; height: 2.75rem; border-radius: 12px; border: 2px solid var(--line); background: var(--sheet); font-size: 1.35rem; cursor: pointer; }
+.emo[aria-pressed="true"] { border-color: var(--btn); background: var(--ticket); }
+.mycard { --z: var(--pop); --zs: var(--pop-soft); position: relative; max-width: 26rem; justify-self: center; width: 100%; background: var(--sheet); border: 2px solid var(--line); border-radius: 22px; padding: 0 1.2rem 1.1rem; overflow: hidden; display: grid; gap: .45rem; box-shadow: var(--shadow); }
+.mycard .awning { margin: 0 -1.2rem .2rem; }
+.mycard .bigemoji { justify-self: center; }
+.mycard .cn { margin: 0; text-align: center; font-family: var(--f-disp); font-size: 1.6rem; line-height: 1.25; }
+.mycard .cmix { margin: 0; text-align: center; color: var(--ink-2); font-size: .9rem; }
+.mycard .cs b { color: var(--z); font-family: var(--f-fun); font-weight: 400; }
+.mycard .cs p { margin: 0; }
+.mycard .cf { margin: .3rem 0 0; text-align: center; color: var(--ink-2); font-size: .82rem; }
+.cardimg { max-width: min(100%, 26rem); border-radius: 16px; border: 1px solid var(--line); }
+.starters { margin: 0; padding-left: 1.1rem; display: grid; gap: .25rem; }
+.guard { font-size: .9rem; color: var(--ink-2); }
+
+/* 안내, 바닥 */
+.guide h2 { font-size: 1.3rem; }
+.guide ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .35rem; }
+.tablewrap { overflow-x: auto; border: 1.5px solid var(--line); border-radius: 14px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: .92rem; }
+th, td { text-align: left; vertical-align: top; padding: .6rem .75rem; border-bottom: 1px solid var(--line); }
+th { background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+.foot { padding-block: 1.2rem 2.5rem; border-top: 1px solid var(--line); color: var(--ink-2); font-size: .85rem; display: grid; gap: .3rem; }
+.foot p { margin: 0; }
+.confirm { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; background: var(--no-bg); border-radius: 12px; padding: .55rem .8rem; }
+.toast { position: fixed; left: 50%; bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: .6rem 1.1rem; border-radius: 999px; z-index: 20; max-width: calc(100% - 32px); box-shadow: var(--shadow); }
+
+@media (max-width: 760px) {
+  .zones, .jobgrid, .answers { grid-template-columns: 1fr; }
+  .filters { grid-template-columns: 1fr 1fr; }
+  .filters .search { grid-column: 1 / -1; }
+  .flow { grid-template-columns: 1fr; }
+  .flow li:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -.95rem; transform: none; }
+  .mixrow { grid-template-columns: 1fr; }
+  .plus { display: none; }
+  .jobhead { grid-template-columns: 1fr; justify-items: start; }
+  .mainnav { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="app"><noscript><p style="padding:16px">이 사이트는 자바스크립트가 켜져 있어야 동작해요.</p></noscript></div>
+<script>
+/* 미래 직업 박람회 2045 · 내용 자료
+   교과서 「4. 과학과 나의 진로」 흐름에 맞춰 존을 나눴다.
+   - 존: 미래 사회의 문제(84~85쪽)와 과학이 기여하는 방법(86~87쪽)
+   - 부스(직업): 하는 일, 미래 전망, 과학 지식과 과학적 탐구 과정(88~91쪽), 관련 미래 기술(92~93쪽)
+   - status: now = 지금 있는 직업, grow = 새로 자라나는 직업, imagine = 상상한 직업(제작자 분류, 2026년 기준)
+   - inq: 도장 퀴즈용 탐구 상황. change(다르게 할 조건) · other(함께 바꾸면 안 되는 조건) · measure(비교할 것)
+   통계, 연봉, 전망 수치는 일부러 넣지 않았다. 문장을 고칠 때는 따옴표 안만 바꾸면 된다. */
+window.EXPO = {
+  zones: [
+    { id: 'pop', name: '인구 변화 존', icon: '👨‍👩‍👧', now: '출생아 수가 줄고, 나이 드신 분이 늘어요.', problem: '일할 사람이 부족해지고 돌봄이 필요한 사람이 많아질 수 있어요.', science: '로봇과 인공지능으로 일을 자동화하고, 몸과 건강을 돕는 기술로 변화에 대처해요.', book: '교과서 84~87쪽 · 인구 문제' },
+    { id: 'env', name: '기후·환경 존', icon: '🌏', now: '이산화 탄소 배출량이 해마다 늘었어요.', problem: '기후 위기와 환경오염으로 사람과 생물이 살기 어려워질 수 있어요.', science: '재생 에너지로 원인을 줄이고, 날씨와 재해를 미리 알아 대비해요.', book: '교과서 84~87쪽 · 환경 문제' },
+    { id: 'safe', name: '안전·윤리 존', icon: '🛡️', now: '인공지능 같은 과학 기술이 아주 빠르게 발달해요.', problem: '규칙이 기술을 따라가지 못하면 기술이 범죄에 악용될 수 있어요.', science: '정보 보안 기술로 범죄를 예방하고, 기술을 바르게 쓰는 기준을 함께 만들어요.', book: '교과서 84~87쪽 · 윤리 문제' },
+    { id: 'life', name: '생활·문화 존', icon: '🚀', now: '새로운 과학 기술이 이동, 옷, 놀이와 배움의 모습을 바꿔요.', problem: '새 기술을 안전하고 즐겁게 쓰도록 도울 사람이 필요해져요.', science: '과학 기술의 발달은 일하는 방식을 바꾸거나 새로운 직업을 만들어 내요.', book: '교과서 92~97쪽 · 과학 기술과 직업' }
+  ],
+  status: { now: '지금 있어요', grow: '자라나는 중', imagine: '상상 직업' },
+  jobs: [
+    { id: 'robot', zone: 'pop', emoji: '🤖', name: '로봇 공학자', status: 'now', book: '교과서 82~83쪽',
+      hook: '사람과 함께 일하는 로봇은 어떻게 만들까?',
+      work: '사람을 돕는 로봇을 설계하고 만들어, 안전하게 움직이는지 시험하고 고쳐요.',
+      why: '일할 사람이 줄어들면 공장, 물류 창고, 돌봄 현장에서 사람과 함께 일하는 로봇이 더 필요해질 수 있어요.',
+      know: [['힘과 운동', '로봇 팔이 물건을 들고 옮길 때 무게와 움직임을 따져요.'], ['전기와 자석', '전기 회로와 모터로 로봇의 관절을 움직여요.']],
+      inq: { sit: '로봇 팔이 컵을 자꾸 떨어뜨려요.', change: '집게가 잡는 힘', other: '컵의 종류', measure: '컵을 떨어뜨린 횟수' },
+      tech: ['로봇', '인공지능'], start: '과학 상자나 블록 코딩으로 움직이는 장치를 만들어 보세요.', tags: ['make', 'machine'] },
+    { id: 'wearable', zone: 'pop', emoji: '🦿', name: '웨어러블 로봇 개발자', status: 'grow',
+      hook: '입는 로봇이 걷기 힘든 사람을 도울 수 있을까?',
+      work: '몸에 입는 로봇을 만들어 걷거나 무거운 물건을 드는 일을 도와요.',
+      why: '나이 드신 분이 늘고 오래 일하는 사람이 많아지면, 몸의 힘을 덜어 주는 기술이 더 필요해질 수 있어요.',
+      know: [['우리 몸', '뼈와 근육이 어떻게 움직이는지 알아야 몸에 맞는 로봇을 만들어요.'], ['힘과 운동', '로봇이 몸을 미는 힘이 너무 세거나 약하지 않게 맞춰요.']],
+      inq: { sit: '로봇을 입고 걸으면 오히려 쉽게 지친다는 사람이 있어요.', change: '로봇이 다리를 밀어 주는 힘', other: '걷는 길의 기울기', measure: '같은 거리를 걸은 뒤의 맥박' },
+      tech: ['로봇', '스마트 의류·웨어러블'], start: '내 몸의 관절이 움직이는 모습을 관찰하고 그림으로 그려 보세요.', tags: ['body', 'machine', 'people'] },
+    { id: 'smartfarm', zone: 'pop', emoji: '🍓', name: '스마트 팜 운영자', status: 'now', book: '교과서 82, 89쪽',
+      hook: '농사짓는 사람이 줄어도 먹을거리를 잘 기를 수 있을까?',
+      work: '센서와 컴퓨터로 온도, 습도, 빛, 물을 조절하며 작물을 길러요.',
+      why: '농사지을 사람이 줄어드는 곳에서는 기계와 자료로 작물을 기르는 방법이 더 중요해질 수 있어요.',
+      know: [['식물의 생활', '식물의 한살이와 잘 자라는 조건(빛, 물, 온도)을 알아야 해요.'], ['날씨', '온도와 습도가 작물이 자라는 데 주는 영향을 살펴요.']],
+      inq: { sit: '딸기가 잘 자라지 않는 칸이 있어요.', change: '물을 주는 양', other: '빛을 비추는 시간', measure: '딸기 포기의 키와 열매 수' },
+      tech: ['사물 인터넷', '빅데이터', '로봇'], start: '같은 식물 두 개를 다른 조건에서 길러 비교해 보세요.', tags: ['nature', 'data'] },
+    { id: 'autocar', zone: 'pop', emoji: '🚗', name: '무인 자동차 연구원', status: 'now', book: '교과서 82쪽',
+      hook: '운전하는 사람이 없어도 자동차가 안전하게 달릴 수 있을까?',
+      work: '자동차가 센서로 주변을 살피고 스스로 판단해 달리도록 연구하고 시험해요.',
+      why: '운전할 사람이 부족하거나 운전이 어려운 사람이 늘면, 스스로 움직이는 탈것이 생활을 도울 수 있어요.',
+      know: [['빛과 그림자', '카메라와 센서가 빛을 이용해 주변 물체를 알아봐요.'], ['힘과 운동', '속력과 멈추는 데 걸리는 거리를 따져 안전하게 멈춰요.']],
+      inq: { sit: '비 오는 날 자동차가 장애물을 늦게 알아차려요.', change: '센서를 단 위치', other: '자동차의 속력', measure: '장애물을 알아차린 거리' },
+      tech: ['자율 주행', '인공지능'], start: '장난감 자동차를 비탈에서 굴리며 비탈 높이에 따라 굴러간 거리를 재 보세요.', tags: ['machine', 'data', 'safety'] },
+    { id: 'health', zone: 'pop', emoji: '💓', name: '디지털 헬스케어 전문가', status: 'grow',
+      hook: '손목시계가 내 건강을 지켜 줄 수 있을까?',
+      work: '몸에 차는 기기로 모은 걸음 수, 심장 박동, 잠 같은 자료를 분석해 건강을 돕는 서비스를 만들어요.',
+      why: '나이 드신 분이 늘면 병원에 가지 않고도 매일 건강을 살피는 기술이 더 필요해질 수 있어요.',
+      know: [['우리 몸', '심장, 혈액, 호흡 같은 몸의 기능을 알아야 자료를 바르게 읽어요.'], ['전기와 자석', '기기의 센서가 몸의 변화를 전기 신호로 바꿔요.']],
+      inq: { sit: '시계가 잰 심장 박동 수가 가끔 이상하게 나와요.', change: '시계를 찬 위치', other: '운동의 종류', measure: '1분 동안 잰 심장 박동 수' },
+      tech: ['스마트 의류·웨어러블', '빅데이터', '인공지능'], start: '운동 전과 후의 맥박을 재서 표로 정리해 보세요.', tags: ['body', 'data', 'people'] },
+    { id: 'carebot', zone: 'pop', emoji: '🧓', name: '돌봄 로봇 코디네이터', status: 'imagine',
+      hook: '할머니 댁의 돌봄 로봇은 누가 챙겨 줄까?',
+      work: '혼자 지내는 어르신 집에 맞는 돌봄 로봇을 골라 설치하고, 로봇이 잘 돕고 있는지 살펴요.',
+      why: '돌봄이 필요한 분은 늘고 돌볼 사람은 부족해지면, 로봇과 사람을 이어 주는 일이 생길 수도 있어요.',
+      know: [['우리 몸', '나이가 들며 달라지는 몸의 기능을 이해해요.'], ['소리', '어르신이 잘 알아듣도록 로봇 목소리의 크기와 높낮이를 맞춰요.']],
+      inq: { sit: '어르신이 로봇의 말을 잘 알아듣지 못하세요.', change: '로봇 목소리의 높낮이', other: '방 안의 소음', measure: '한 번에 알아들은 문장 수' },
+      tech: ['로봇', '인공지능', '사물 인터넷'], start: '가족에게 집에서 불편한 점을 여쭙고, 도울 수 있는 장치를 상상해 그려 보세요.', tags: ['people', 'machine', 'body'] },
+
+    { id: 'climate', zone: 'env', emoji: '🌡️', name: '기후변화 대응 전문가', status: 'now', book: '교과서 83쪽',
+      hook: '더워지는 지구에서 우리 동네를 어떻게 지킬까?',
+      work: '기후 변화가 지역에 주는 영향을 조사하고, 온실가스를 줄이거나 피해에 대비하는 계획을 세워요.',
+      why: '폭염과 큰비 같은 피해가 커질 수 있어, 원인을 줄이고 대비하는 일이 더 중요해질 수 있어요.',
+      know: [['날씨', '기온과 강수량 같은 날씨 자료로 변화를 찾아요.'], ['여러 가지 기체', '이산화 탄소 같은 기체가 지구 온도에 주는 영향을 알아요.']],
+      inq: { sit: '여름 한낮에 학교 운동장이 너무 뜨거워요.', change: '땅을 덮은 재료', other: '그늘의 넓이', measure: '한낮의 땅 표면 온도' },
+      tech: ['빅데이터', '재생 에너지'], start: '일주일 동안 같은 시각에 기온을 재서 그래프로 그려 보세요.', tags: ['nature', 'data', 'safety'] },
+    { id: 'solar', zone: 'env', emoji: '☀️', name: '재생 에너지 연구원', status: 'now',
+      hook: '햇빛과 바람만으로 우리 집 전기를 모두 만들 수 있을까?',
+      work: '햇빛, 바람 같은 에너지로 전기를 더 잘 만드는 장치와 방법을 연구해요.',
+      why: '이산화 탄소를 덜 내는 에너지가 기후 위기의 원인을 줄이는 방법이라서 더 필요해질 수 있어요.',
+      know: [['에너지', '빛 에너지와 운동 에너지가 전기 에너지로 바뀌는 과정을 알아요.'], ['빛과 그림자', '태양 전지판이 빛을 가장 많이 받는 방향과 각도를 찾아요.']],
+      inq: { sit: '태양 전지판이 만드는 전기가 계절마다 달라요.', change: '전지판을 기울인 각도', other: '전지판의 크기', measure: '만들어진 전기의 양' },
+      tech: ['재생 에너지'], start: '작은 태양 전지와 전구로 빛을 비추는 방향을 바꿔 가며 밝기를 비교해 보세요.', tags: ['nature', 'make', 'machine'] },
+    { id: 'weather', zone: 'env', emoji: '🌧️', name: '기상 예보관', status: 'now',
+      hook: '큰비가 올 것을 미리 알면 무엇을 지킬 수 있을까?',
+      work: '관측 자료를 분석해 날씨를 예보하고, 위험한 날씨는 미리 알려 피해를 줄여요.',
+      why: '갑작스러운 큰비나 폭염이 잦아지면 날씨를 정확하게 알리는 일이 더 중요해질 수 있어요.',
+      know: [['날씨', '기압, 습도, 바람이 날씨를 어떻게 바꾸는지 알아요.'], ['물의 상태 변화', '수증기가 응결해 구름과 비가 되는 과정을 이해해요.']],
+      inq: { sit: '예보와 실제로 내린 비의 양이 자주 달라요.', change: '예보에 쓰는 관측 자료의 수', other: '예보하는 지역', measure: '예보가 맞은 날의 수' },
+      tech: ['인공지능', '빅데이터', '우주 기술'], start: '일주일 동안 구름 모양과 다음 날 날씨를 함께 기록해 보세요.', tags: ['nature', 'data', 'safety'] },
+    { id: 'upcycle', zone: 'env', emoji: '♻️', name: '업사이클링 디자이너', status: 'now',
+      hook: '버려진 물건이 멋진 물건으로 다시 태어날 수 있을까?',
+      work: '버려지는 물건이나 재료에 디자인을 더해 쓸모 있고 멋진 물건으로 다시 만들어요.',
+      why: '쓰레기와 환경오염을 줄이는 생활이 중요해지면서, 자원을 다시 쓰는 일이 더 주목받을 수 있어요.',
+      know: [['물체와 물질', '재료마다 단단함, 무게, 물에 젖는 정도가 달라 알맞게 골라요.'], ['혼합물의 분리', '섞인 재료를 나누어 다시 쓸 수 있는 것을 골라내요.']],
+      inq: { sit: '헌 청바지로 만든 가방이 쉽게 찢어져요.', change: '바느질하는 방법', other: '천의 두께', measure: '가방이 견디는 무게' },
+      tech: ['3D 프린팅'], start: '집에서 버려지는 물건 하나로 쓸모 있는 물건을 만들어 보세요.', tags: ['art', 'make', 'nature'] },
+    { id: 'ocean', zone: 'env', emoji: '🐢', name: '해양 쓰레기 수거 로봇 개발자', status: 'grow',
+      hook: '바다에 떠다니는 쓰레기를 로봇이 주울 수 있을까?',
+      work: '바다와 강의 쓰레기를 찾아 모으는 로봇과 장치를 만들고 시험해요.',
+      why: '바다 쓰레기로 생물이 피해를 입는 문제가 커지면, 쓰레기를 모으는 기술이 더 필요해질 수 있어요.',
+      know: [['생태계와 환경', '쓰레기가 바다 생물과 먹이 관계에 주는 영향을 알아요.'], ['힘과 운동', '물에 뜨고 나아가는 힘을 이용해 로봇을 움직여요.']],
+      inq: { sit: '로봇 그물에 작은 쓰레기가 잘 걸리지 않아요.', change: '그물 눈의 크기', other: '로봇이 움직이는 빠르기', measure: '모은 쓰레기의 무게' },
+      tech: ['로봇', '드론·에어 택시', '인공지능'], start: '우리 동네 하천이나 바닷가의 쓰레기를 조사해 종류별로 분류해 보세요.', tags: ['nature', 'machine', 'make'] },
+    { id: 'carbon', zone: 'env', emoji: '👣', name: '탄소 발자국 코치', status: 'imagine',
+      hook: '내가 하루에 내는 이산화 탄소를 줄일 수 있을까?',
+      work: '집이나 학교, 가게의 에너지 사용을 분석해 이산화 탄소를 줄이는 생활 방법을 알려 줘요.',
+      why: '모두가 함께 이산화 탄소를 줄여야 하는 시대에는 생활 습관을 돕는 전문가가 생길 수도 있어요.',
+      know: [['에너지', '전기와 연료를 쓸 때 에너지가 어떻게 쓰이는지 알아요.'], ['연소와 소화', '연료가 탈 때 이산화 탄소가 생기는 까닭을 알아요.']],
+      inq: { sit: '반마다 교실 전기 사용량이 달라요.', change: '불을 끄는 규칙', other: '교실의 크기', measure: '일주일 동안 쓴 전기의 양' },
+      tech: ['빅데이터', '사물 인터넷'], start: '우리 집 전기 제품을 하루 동안 얼마나 썼는지 기록해 보세요.', tags: ['data', 'people', 'nature'] },
+
+    { id: 'security', zone: 'safe', emoji: '🔐', name: '정보 보호 전문가', status: 'now', book: '교과서 83, 99쪽',
+      hook: '해커로부터 내 정보를 어떻게 지킬까?',
+      work: '보안 시스템을 설계하고 실행해 해킹과 악성 소프트웨어로부터 컴퓨터와 개인 정보를 지켜요.',
+      why: '생활의 많은 일이 인터넷으로 이루어질수록 정보를 노리는 범죄를 막는 일이 더 중요해질 수 있어요.',
+      know: [['전기와 자석', '컴퓨터와 통신 기기가 전기 신호로 정보를 저장하고 주고받는 원리를 알아요.']],
+      inq: { sit: '가짜 문자에 속는 사람이 많아요.', change: '경고 문구를 보여 주는 방법', other: '문자를 받는 시간', measure: '가짜 문자를 알아챈 사람 수' },
+      tech: ['정보 보안', '인공지능'], start: '안전한 비밀번호를 만드는 규칙을 조사해 친구들에게 알려 보세요.', tags: ['data', 'safety', 'machine'] },
+    { id: 'roboethics', zone: 'safe', emoji: '⚖️', name: '로봇 윤리학자', status: 'grow', book: '교과서 82쪽',
+      hook: '로봇이 잘못을 하면 누구의 책임일까?',
+      work: '로봇과 인공지능이 사람에게 해를 끼치지 않고 공정하게 쓰이도록 기준을 연구하고 제안해요.',
+      why: '로봇과 인공지능이 생활 깊숙이 들어올수록, 기술을 바르게 쓰는 규칙을 만드는 일이 더 필요해질 수 있어요.',
+      know: [['전기와 자석', '로봇이 센서와 전기로 움직이는 원리를 알아야 위험을 판단해요.'], ['우리 몸', '사람이 위험을 보고 피하는 데 걸리는 시간을 알아야 안전한 기준을 정해요.']],
+      inq: { sit: '청소 로봇이 반려동물을 장애물로 알아보지 못하고 부딪혀요.', change: '로봇이 멈추는 거리', other: '방의 밝기', measure: '반려동물과 부딪힌 횟수' },
+      tech: ['로봇', '인공지능'], start: '"로봇이 해도 되는 일과 하면 안 되는 일"을 친구들과 토의해 보세요.', tags: ['people', 'safety', 'machine'] },
+    { id: 'ailawyer', zone: 'safe', emoji: '👩‍⚖️', name: '인공지능 전문 변호사', status: 'grow', book: '교과서 97쪽',
+      hook: '인공지능이 만든 그림은 누구의 것일까?',
+      work: '인공지능 기술과 관련된 법적 문제를 해결하고, 인공지능의 사용과 관련된 계약서를 검토하고 작성해요.',
+      why: '인공지능 기술이 발전하면서 새로운 법적 문제가 생기고, 이를 해결할 변호사가 필요해질 수 있어요.',
+      know: [['빛과 그림자', '사진이 진짜인지 따질 때 빛과 그림자의 방향이 자연스러운지 살펴요.']],
+      inq: { sit: '어떤 사진이 인공지능으로 만든 가짜인지 다툼이 생겼어요.', change: '살펴보는 부분', other: '사진의 크기', measure: '가짜를 바르게 찾아낸 수' },
+      tech: ['인공지능', '정보 보안'], start: '뉴스에서 인공지능과 관련된 다툼을 찾아, 어떤 규칙이 필요할지 생각해 보세요.', tags: ['people', 'data', 'safety'] },
+    { id: 'datasci', zone: 'safe', emoji: '📊', name: '데이터 과학자', status: 'now', book: '교과서 99쪽',
+      hook: '많은 자료 속에서 숨은 규칙을 찾을 수 있을까?',
+      work: '데이터를 수집하고 분석해 의미 있는 결론을 끌어내고, 더 나은 결정을 하도록 도와요.',
+      why: '사회 곳곳에 자료가 쌓일수록 자료를 바르게 읽고 판단하는 사람이 더 필요해질 수 있어요.',
+      know: [['분야마다 다른 과학', '건강 자료를 다루면 우리 몸을, 날씨 자료를 다루면 날씨를 알아야 바르게 해석해요.']],
+      inq: { sit: '급식에서 남는 음식의 양이 날마다 달라요.', change: '메뉴의 종류', other: '급식 시간', measure: '남은 음식의 무게' },
+      tech: ['빅데이터', '인공지능'], start: '우리 반 친구들이 좋아하는 과일을 조사해 그래프로 나타내 보세요.', tags: ['data', 'people'] },
+    { id: 'aiexpert', zone: 'safe', emoji: '🧠', name: '인공지능 전문가', status: 'now', book: '교과서 83, 99쪽',
+      hook: '인공지능은 어떻게 고양이와 강아지를 구별할까?',
+      work: '인공지능이 자료로 배우고 판단하도록 만들고, 잘못 판단하지 않는지 시험해요.',
+      why: '인공지능이 여러 분야에 쓰일수록 인공지능을 만들고 바르게 고치는 사람이 더 필요해질 수 있어요.',
+      know: [['동물의 생활', '동물을 구별하는 인공지능을 만들려면 동물의 생김새와 특징을 알아야 해요.'], ['빛과 그림자', '사진이 어둡거나 그림자가 지면 인공지능이 헷갈릴 수 있어요.']],
+      inq: { sit: '인공지능이 어두운 사진 속 강아지를 고양이로 착각해요.', change: '배우게 한 사진의 밝기', other: '사진 속 동물의 크기', measure: '바르게 맞힌 사진의 수' },
+      tech: ['인공지능', '빅데이터'], start: '스무고개로 동물을 맞히며 어떤 특징으로 구별하는지 정리해 보세요.', tags: ['data', 'machine'] },
+    { id: 'forensic', zone: 'safe', emoji: '🕵️', name: '디지털 포렌식 수사관', status: 'now',
+      hook: '사진 한 장으로 범죄의 증거를 찾을 수 있을까?',
+      work: '컴퓨터와 스마트폰에 남은 기록을 과학적으로 분석해 범죄의 증거를 찾아요.',
+      why: '과학 기술을 이용한 범죄가 늘어날수록 디지털 증거를 다루는 전문가가 더 필요해질 수 있어요.',
+      know: [['전기와 자석', '기기에 정보가 전기 신호로 저장되는 원리를 알아요.'], ['지구와 우주', '태양의 높이에 따라 그림자의 길이와 방향이 바뀌는 것으로 사진을 찍은 시각을 추리해요.']],
+      inq: { sit: '사진이 찍힌 시각을 알아내야 해요.', change: '막대 그림자를 잰 시각', other: '막대의 길이', measure: '그림자의 길이와 방향' },
+      tech: ['정보 보안', '인공지능'], start: '하루 동안 막대 그림자의 길이를 재서 시각과 그림자의 관계를 찾아보세요.', tags: ['safety', 'data'] },
+
+    { id: 'uam', zone: 'life', emoji: '🚁', name: '도심 항공 교통관제사', status: 'grow', book: '교과서 97쪽',
+      hook: '하늘을 나는 택시들이 서로 부딪히지 않으려면?',
+      work: '드론, 에어 택시 등 도심에서 운행하는 항공기의 안전을 위해 도심 항공 교통 정보를 안내해요.',
+      why: '도심에서 운행하는 새로운 운송 수단이 생기면서 도심 항공 교통을 전문적으로 관리할 사람이 필요해질 수 있어요.',
+      know: [['날씨', '바람과 비가 작은 항공기의 비행에 주는 영향을 알아요.'], ['소리', '도시의 소음이 줄어들도록 비행 경로를 정해요.']],
+      inq: { sit: '에어 택시가 지나갈 때 시끄럽다는 주민이 많아요.', change: '날아가는 높이', other: '날씨', measure: '땅에서 잰 소리의 크기' },
+      tech: ['드론·에어 택시', '인공지능'], start: '종이비행기의 날개 모양만 바꿔 가며 날아간 거리를 비교해 보세요.', tags: ['machine', 'safety', 'space'] },
+    { id: 'smartwear', zone: 'life', emoji: '🧥', name: '스마트 의류 개발자', status: 'grow', book: '교과서 82, 92~93쪽',
+      hook: '옷이 내 몸 상태를 알려 줄 수 있을까?',
+      work: '센서와 전기가 흐르는 실로 몸의 상태를 재거나 온도를 조절하는 옷을 만들어요.',
+      why: '건강을 스스로 챙기려는 사람이 늘면, 입기만 해도 몸을 살피는 옷이 더 쓰일 수 있어요.',
+      know: [['우리 몸', '스마트 의류를 개발하려면 우리 몸의 구조와 기능을 이해하는 것이 중요해요.'], ['온도와 열', '옷이 몸의 열을 빼앗기지 않게 막는 원리를 알아요.']],
+      inq: { sit: '겨울 운동복이 땀에 젖으면 금방 차가워져요.', change: '옷감의 종류', other: '운동한 시간', measure: '10분 뒤 옷 속의 온도' },
+      tech: ['스마트 의류·웨어러블', '확장 현실(XR)', '인공지능'], start: '여러 옷감으로 컵을 감싸고, 따뜻한 물이 식는 빠르기를 비교해 보세요.', tags: ['art', 'body', 'make'] },
+    { id: 'vr', zone: 'life', emoji: '🥽', name: '가상 현실 전문가', status: 'now', book: '교과서 83쪽',
+      hook: '교실에서 화성 여행을 할 수 있을까?',
+      work: '가상 현실이나 증강 현실로 실제처럼 체험할 수 있는 공간과 콘텐츠를 만들어요.',
+      why: '교육, 훈련, 의료, 놀이에서 직접 하기 어려운 일을 가상으로 체험하는 일이 늘어날 수 있어요.',
+      know: [['빛과 그림자', '빛이 렌즈를 지나며 꺾이는 원리로 눈앞에 크고 또렷한 화면을 보여 줘요.'], ['소리', '소리가 오는 방향을 실감 나게 들려줘요.']],
+      inq: { sit: '가상 현실 체험을 오래 하면 어지럽다는 사람이 있어요.', change: '화면이 바뀌는 빠르기', other: '체험하는 내용', measure: '어지러움을 느낀 사람 수' },
+      tech: ['확장 현실(XR)', '메타버스'], start: '돋보기를 눈에서 멀리, 가까이 하며 글자 크기가 어떻게 달라지는지 관찰해 보세요.', tags: ['art', 'machine', 'space'] },
+    { id: 'creator', zone: 'life', emoji: '🎥', name: '개인 미디어 콘텐츠 제작자', status: 'now', book: '교과서 89쪽',
+      hook: '그림자 없이 제품을 멋지게 찍으려면?',
+      work: '영상과 소리를 기획하고 촬영하고 편집해 사람들에게 정보와 재미를 전해요.',
+      why: '누구나 영상으로 소통하는 시대에 정확하고 유익한 콘텐츠를 만드는 사람이 더 필요해질 수 있어요.',
+      know: [['빛과 그림자', '빛의 성질을 알아야 그림자가 생기지 않게 조명을 놓아요.'], ['소리', '소리의 전달을 알아야 목소리가 또렷하게 들려요.']],
+      inq: { sit: '제품을 찍으면 그림자가 크게 생겨요.', change: '조명의 위치', other: '카메라의 위치', measure: '그림자가 생긴 넓이' },
+      tech: ['인공지능', '확장 현실(XR)'], start: '손전등의 위치를 바꿔 가며 인형 그림자의 크기와 방향을 관찰해 보세요.', tags: ['art', 'people'] },
+    { id: 'drone', zone: 'life', emoji: '🛸', name: '드론 전문가', status: 'now',
+      hook: '드론이 위험한 곳에서 사람을 찾을 수 있을까?',
+      work: '드론을 조종해 촬영, 배달, 구조, 농사일을 돕고, 드론이 안전하게 날도록 점검해요.',
+      why: '사람이 가기 어렵거나 위험한 곳의 일을 드론이 맡는 경우가 늘어날 수 있어요.',
+      know: [['힘과 운동', '프로펠러가 만드는 힘과 무게가 균형을 이루어야 떠 있어요.'], ['날씨', '바람이 세면 드론이 흔들려 비행을 조절해야 해요.']],
+      inq: { sit: '드론에 짐을 실으면 배터리가 빨리 닳아요.', change: '실은 짐의 무게', other: '바람의 세기', measure: '날 수 있는 시간' },
+      tech: ['드론·에어 택시', '인공지능'], start: '프로펠러 장난감을 날려 보며 날개 수에 따라 나는 시간을 비교해 보세요.', tags: ['machine', 'nature', 'safety'] },
+    { id: 'spaceguide', zone: 'life', emoji: '🌌', name: '우주 여행 안내원', status: 'imagine',
+      hook: '수학여행을 우주로 갈 수 있을까?',
+      work: '우주를 여행하는 사람들에게 안전 수칙을 알려 주고, 별과 행성을 안내해요.',
+      why: '우주 기술이 발전해 우주를 오가는 일이 쉬워지면, 여행하는 사람을 돕는 직업이 생길 수도 있어요.',
+      know: [['지구와 우주', '태양계 행성과 별의 특징을 알아야 안내할 수 있어요.'], ['우리 몸', '무중력 상태에서 몸이 어떻게 달라지는지 알아야 안전을 지켜요.']],
+      inq: { sit: '우주선 창밖의 별이 잘 안 보인다는 손님이 있어요.', change: '우주선 안 조명의 밝기', other: '창문의 크기', measure: '보이는 별의 수' },
+      tech: ['우주 기술', '확장 현실(XR)'], start: '밤하늘의 별자리를 관찰하고, 계절에 따라 달라지는지 기록해 보세요.', tags: ['space', 'people', 'nature'] }
+  ],
+
+  /* 나에게 맞는 부스 찾기: 고른 답의 태그로 부스를 추천한다(재미로 보는 추천) */
+  find: [
+    { q: '쉬는 시간에 가장 하고 싶은 일은?', a: [['🧱 무언가 만들기', ['make']], ['🌿 밖에서 자연 관찰하기', ['nature']], ['🎨 그림이나 영상 만들기', ['art']], ['💬 친구 고민 들어 주기', ['people']]] },
+    { q: '과학 시간에 가장 신나는 순간은?', a: [['🔋 전기 회로에 불이 켜질 때', ['machine']], ['📊 실험 결과를 그래프로 그릴 때', ['data']], ['🫀 우리 몸의 비밀을 알게 될 때', ['body']], ['🔭 별과 행성을 볼 때', ['space']]] },
+    { q: '미래에 가장 해결하고 싶은 문제는?', a: [['🌏 더워지는 지구', ['nature']], ['🧓 돌봄이 필요한 사람', ['people', 'body']], ['🛡️ 범죄와 사고', ['safety']], ['🚀 더 편리한 생활', ['machine', 'space']]] },
+    { q: '내가 자신 있는 것은?', a: [['🔍 꼼꼼하게 살피기', ['data', 'safety']], ['🛠️ 손으로 고치고 조립하기', ['make', 'machine']], ['🗣️ 설명하고 설득하기', ['people']], ['💡 새로운 아이디어 내기', ['art']]] },
+    { q: '일하고 싶은 곳은?', a: [['🧪 연구실과 컴퓨터 앞', ['data', 'machine']], ['🌳 자연 속', ['nature']], ['🏥 사람 곁', ['body', 'people']], ['🌌 하늘과 우주', ['space']]] }
+  ],
+  tagNames: { make: '만들기', machine: '기계와 로봇', nature: '자연과 환경', body: '몸과 건강', data: '자료와 컴퓨터', people: '사람 돕기', safety: '안전 지키기', art: '표현과 디자인', space: '하늘과 우주' },
+
+  /* 나만의 부스 만들기 */
+  techs: ['인공지능', '로봇', '확장 현실(XR)', '드론·에어 택시', '자율 주행', '사물 인터넷', '3D 프린팅', '빅데이터', '생명 공학', '재생 에너지', '스마트 의류·웨어러블', '홀로그램', '우주 기술', '정보 보안', '메타버스'],
+  problems: ['일할 사람 부족', '돌봄이 필요한 사람 증가', '기후 위기', '환경오염', '쓰레기 문제', '개인 정보 유출과 해킹', '가짜 사진과 가짜 뉴스', '도시 교통 혼잡', '자연재해', '먹을거리 부족'],
+  emojis: ['🤖', '🛸', '🚁', '🌱', '🌊', '☀️', '🧬', '🩺', '🧠', '🔐', '🎮', '🎨', '🏗️', '🛰️', '🐾', '🧪']
+};
+</script>
+<script>
+/* 미래 직업 박람회 2045 · 화면
+   해시로 화면을 바꾼다: #home, #zone-pop, #job-robot, #find, #maker, #passport, #guide
+   도장·추천·내가 만든 부스는 이 기기 브라우저(localStorage)에만 저장한다. */
+(function () {
+  'use strict';
+  var E = window.EXPO, KEY = 'expo2045-v1';
+  var ZONE = {}; E.zones.forEach(function (z) { ZONE[z.id] = z; });
+  var JOB = {}; E.jobs.forEach(function (j) { JOB[j.id] = j; });
+
+  /* ---------- 저장 ---------- */
+  function fresh() { return { v: 1, stamps: {}, find: [], maker: { problem: '', tech: '', emoji: '🤖', name: '', work: '', why: '', know: '', team: '' } }; }
+  var st = (function () { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.v === 1) return s; } catch (e) { /* 저장이 막혀도 동작 */ } return fresh(); })();
+  var saveT = null;
+  function saveNow() { clearTimeout(saveT); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* 무시 */ } }
+  function save() { clearTimeout(saveT); saveT = setTimeout(saveNow, 150); }
+  window.addEventListener('pagehide', saveNow);
+
+  /* ---------- 작은 도구 ---------- */
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.slice(0, 2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) add(el, arguments[i]);
+    return el;
+  }
+  function add(el, c) {
+    if (c == null || c === false) return;
+    if (Array.isArray(c)) { c.forEach(function (x) { add(el, x); }); return; }
+    el.appendChild(typeof c === 'object' ? c : document.createTextNode(String(c)));
+  }
+  function josa(w, pair) {
+    var p = pair.split('/'), s = String(w || '').replace(/\s*\([^)]*\)\s*$/, '').trim(), c = s.charCodeAt(s.length - 1);
+    if (!(c >= 0xAC00 && c <= 0xD7A3)) return w + p[0] + '(' + p[1] + ')';
+    var jong = (c - 0xAC00) % 28;
+    if (p[0] === '으로' && jong === 8) return w + '로';
+    return w + (jong ? p[0] : p[1]);
+  }
+  function count(obj) { return Object.keys(obj).filter(function (k) { return obj[k]; }).length; }
+  function zoneJobs(zid) { return E.jobs.filter(function (j) { return j.zone === zid; }); }
+  var toastT = null;
+  function toast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { t.hidden = true; }, 2600); }
+  function go(hash) { if (location.hash === '#' + hash) route(); else location.hash = hash; }
+
+  /* ---------- 공통 조각 ---------- */
+  function statusPill(j) { return h('span', { class: 'pill st-' + j.status }, E.status[j.status]); }
+  function stampMark(small) { return h('span', { class: 'stamp' + (small ? ' small' : ''), 'aria-label': '도장 받음' }, '도장'); }
+  function boothCard(j) {
+    var z = ZONE[j.zone], done = !!st.stamps[j.id];
+    return h('a', { class: 'booth z-' + j.zone, href: '#job-' + j.id },
+      h('span', { class: 'awning', 'aria-hidden': 'true' }),
+      h('span', { class: 'emoji', 'aria-hidden': 'true' }, j.emoji),
+      h('span', { class: 'bname' }, j.name),
+      h('span', { class: 'hook' }, j.hook),
+      h('span', { class: 'bmeta' }, statusPill(j), h('span', { class: 'zname' }, z.name)),
+      done ? stampMark(true) : null);
+  }
+  function header() {
+    var n = count(st.stamps);
+    var links = [['home', '박람회 지도'], ['find', '나에게 맞는 부스'], ['maker', '나만의 부스 만들기'], ['passport', '내 여권 ' + n + '/' + E.jobs.length]];
+    var cur = (location.hash || '#home').slice(1).split('-')[0];
+    return h('header', { class: 'top' }, h('div', { class: 'wrap topin' },
+      h('a', { class: 'logo', href: '#home' }, h('span', { class: 'l1' }, '미래 직업 박람회'), h('span', { class: 'l2' }, '2045')),
+      h('nav', { class: 'mainnav', 'aria-label': '주요 메뉴' }, links.map(function (l) {
+        return h('a', { href: '#' + l[0], 'aria-current': cur === l[0] || (l[0] === 'home' && (cur === 'zone' || cur === 'job' || cur === 'map')) ? 'page' : null }, l[1]);
+      }))));
+  }
+  function footer() {
+    return h('footer', { class: 'foot wrap' },
+      h('p', null, '6학년 2학기 과학 「4. 과학과 나의 진로」 수업 자료 · 직업 정보는 배움을 위해 쉽게 풀어 쓴 것이에요. 더 정확한 정보는 커리어넷(career.go.kr)에서 찾아보세요.'),
+      h('p', null, h('a', { href: '#guide' }, '선생님용 안내'), ' · 도장과 만든 부스는 이 기기에만 저장돼요.'));
+  }
+
+  /* ---------- 화면: 지도(홈) ---------- */
+  var filt = { q: '', zone: '', sci: '', tech: '' };
+  function viewHome() {
+    var main = h('main', { id: 'main', class: 'wrap', tabindex: '-1' });
+    main.appendChild(h('section', { class: 'hero' },
+      h('p', { class: 'kicker' }, '6학년 2학기 과학 · 과학과 나의 진로'),
+      h('h1', null, '20년 뒤, 우리는 어떤 일을 하고 있을까?'),
+      h('p', { class: 'lead' }, '미래 사회의 문제를 과학으로 해결하는 직업들이 부스를 열었어요. 존을 돌며 직업 속 과학을 찾고, 탐구 미션을 풀어 여권에 도장을 모아 보세요. 마지막에는 나만의 미래 직업 부스를 만들어요.'),
+      h('div', { class: 'heroacts' },
+        h('a', { class: 'ticket', href: '#map' }, h('span', { class: 't1' }, '입장권'), h('span', { class: 't2' }, '박람회 지도 보기')),
+        h('a', { class: 'btn', href: '#find' }, '나에게 맞는 부스 찾기'),
+        h('a', { class: 'btn', href: '#maker' }, '나만의 부스 만들기'))));
+    var map = h('section', { class: 'map', id: 'map', 'aria-labelledby': 'map-t' }, h('h2', { id: 'map-t' }, '박람회 지도'),
+      h('p', { class: 'sub' }, '각 존의 입구에는 미래 사회의 문제와 과학이 돕는 방법이 적혀 있어요.'));
+    var grid = h('div', { class: 'zones' });
+    E.zones.forEach(function (z) {
+      var js = zoneJobs(z.id), got = js.filter(function (j) { return st.stamps[j.id]; }).length;
+      grid.appendChild(h('a', { class: 'zone z-' + z.id, href: '#zone-' + z.id },
+        h('span', { class: 'zicon', 'aria-hidden': 'true' }, z.icon),
+        h('span', { class: 'zt' }, z.name),
+        h('span', { class: 'zp' }, z.now),
+        h('span', { class: 'zbar', role: 'img', 'aria-label': '도장 ' + got + '개 / ' + js.length + '개' }, h('i', { style: 'width:' + Math.round(got / js.length * 100) + '%' })),
+        h('span', { class: 'zc' }, '도장 ' + got + ' / ' + js.length + ' · 입장하기 →')));
+    });
+    map.appendChild(grid);
+    main.appendChild(map);
+    main.appendChild(allBooths());
+    return main;
+  }
+  function allBooths() {
+    var sec = h('section', { class: 'all', 'aria-labelledby': 'all-t' }, h('h2', { id: 'all-t' }, '모든 부스 둘러보기'));
+    var sci = [], tech = [];
+    E.jobs.forEach(function (j) { j.know.forEach(function (k) { if (sci.indexOf(k[0]) < 0) sci.push(k[0]); }); j.tech.forEach(function (t) { if (tech.indexOf(t) < 0) tech.push(t); }); });
+    var q = h('input', { type: 'search', id: 'q', class: 'search', placeholder: '직업, 과학 지식, 기술로 찾기 (예: 빛, 로봇, 날씨)', 'aria-label': '부스 찾기' });
+    q.value = filt.q;
+    function sel(id, label, list, key) {
+      var s = h('select', { id: id, 'aria-label': label }, h('option', { value: '' }, label + ' 전체'));
+      list.forEach(function (x) { var o = h('option', { value: x }, x); if (filt[key] === x) o.selected = true; s.appendChild(o); });
+      s.addEventListener('change', function () { filt[key] = s.value; draw(); });
+      return s;
+    }
+    var zs = h('select', { id: 'fz', 'aria-label': '존' }, h('option', { value: '' }, '존 전체'));
+    E.zones.forEach(function (z) { var o = h('option', { value: z.id }, z.name); if (filt.zone === z.id) o.selected = true; zs.appendChild(o); });
+    zs.addEventListener('change', function () { filt.zone = zs.value; draw(); });
+    var bar = h('div', { class: 'filters' }, q, zs, sel('fs', '과학 지식', sci, 'sci'), sel('ft', '미래 기술', tech, 'tech'));
+    var info = h('p', { class: 'sub', 'aria-live': 'polite' });
+    var grid = h('div', { class: 'booths' });
+    function draw() {
+      var words = filt.q.trim().toLowerCase();
+      var list = E.jobs.filter(function (j) {
+        if (filt.zone && j.zone !== filt.zone) return false;
+        if (filt.sci && !j.know.some(function (k) { return k[0] === filt.sci; })) return false;
+        if (filt.tech && j.tech.indexOf(filt.tech) < 0) return false;
+        if (words) { var hay = [j.name, j.hook, j.work, j.know.map(function (k) { return k.join(' '); }).join(' '), j.tech.join(' ')].join(' ').toLowerCase(); if (hay.indexOf(words) < 0) return false; }
+        return true;
+      });
+      grid.textContent = '';
+      list.forEach(function (j) { grid.appendChild(boothCard(j)); });
+      info.textContent = list.length ? '부스 ' + list.length + '곳' : '조건에 맞는 부스가 없어요. 다른 낱말로 찾아보세요.';
+    }
+    q.addEventListener('input', function () { filt.q = q.value; draw(); });
+    draw();
+    sec.appendChild(bar); sec.appendChild(info); sec.appendChild(grid);
+    return sec;
+  }
+
+  /* ---------- 화면: 존 ---------- */
+  function viewZone(z) {
+    var main = h('main', { id: 'main', class: 'wrap', tabindex: '-1' });
+    main.appendChild(h('nav', { class: 'crumb', 'aria-label': '위치' }, h('a', { href: '#home' }, '박람회 지도'), ' › ', z.name));
+    main.appendChild(h('section', { class: 'gate z-' + z.id, 'aria-labelledby': 'gate-t' },
+      h('span', { class: 'gicon', 'aria-hidden': 'true' }, z.icon),
+      h('h1', { id: 'gate-t' }, z.name),
+      h('ol', { class: 'flow' },
+        h('li', null, h('b', null, '지금의 모습'), h('span', null, z.now)),
+        h('li', null, h('b', null, '일어날 수 있는 문제'), h('span', null, z.problem)),
+        h('li', null, h('b', null, '과학이 돕는 방법'), h('span', null, z.science))),
+      h('p', { class: 'book' }, z.book)));
+    var grid = h('div', { class: 'booths' });
+    zoneJobs(z.id).forEach(function (j) { grid.appendChild(boothCard(j)); });
+    main.appendChild(h('section', { 'aria-labelledby': 'zb-t' }, h('h2', { id: 'zb-t' }, '이 존의 부스'), grid));
+    var i = E.zones.indexOf(z), nz = E.zones[(i + 1) % E.zones.length];
+    main.appendChild(h('p', { class: 'next' }, h('a', { class: 'btn', href: '#zone-' + nz.id }, '다음 존: ' + nz.name + ' →')));
+    return main;
+  }
+
+  /* ---------- 화면: 부스(직업) ---------- */
+  function shuffleFor(id, arr) { var s = 0; for (var i = 0; i < id.length; i++) s = (s * 31 + id.charCodeAt(i)) % 9973; return arr.slice().sort(function (a, b) { return ((a.k.charCodeAt(0) * 7 + s) % 3) - ((b.k.charCodeAt(0) * 7 + s) % 3); }); }
+  function mission(j) {
+    var q = j.inq;
+    var opts = shuffleFor(j.id, [
+      { k: 'a', ok: true, t: q.change + '만 다르게 하고 나머지 조건은 모두 같게 해서 ' + josa(q.measure, '을/를') + ' 비교한다.', why: '맞아요! 한 가지 조건만 다르게 해야 결과가 달라진 까닭이 그 조건 때문인지 알 수 있어요. 이것이 이 직업의 과학적 탐구 과정이에요.' },
+      { k: 'b', t: josa(q.change, '과/와') + ' ' + josa(q.other, '을/를') + ' 한꺼번에 바꿔서 ' + josa(q.measure, '을/를') + ' 비교한다.', why: '두 조건을 한꺼번에 바꾸면, 결과가 달라진 까닭이 어느 조건 때문인지 알 수 없어요. 다시 골라 볼까요?' },
+      { k: 'c', t: josa(q.change, '을/를') + ' 한 번만 바꿔 보고, 마음에 드는 쪽으로 바로 정한다.', why: '한 번만 해 보고 느낌으로 정하면 우연일 수 있어요. 조건을 비교하고 여러 번 확인해야 해요. 다시 골라 볼까요?' }
+    ]);
+    var done = !!st.stamps[j.id];
+    var box = h('section', { class: 'mission z-' + j.zone + (done ? ' done' : ''), 'aria-labelledby': 'ms-t' },
+      h('h2', { id: 'ms-t' }, '도장 미션 · 과학적 탐구 과정'),
+      h('p', { class: 'sit' }, h('b', null, '곤란한 상황 '), q.sit),
+      h('p', null, '원인을 찾으려면 어떻게 알아봐야 할까요?'));
+    var fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    var list = h('div', { class: 'opts', role: 'group', 'aria-label': '탐구 방법 고르기' });
+    opts.forEach(function (o) {
+      list.appendChild(h('button', { type: 'button', class: 'opt', onclick: function (e) {
+        Array.prototype.forEach.call(list.children, function (b) { b.classList.remove('wrong', 'right'); });
+        e.currentTarget.classList.add(o.ok ? 'right' : 'wrong');
+        fb.textContent = o.why; fb.className = 'fb ' + (o.ok ? 'ok' : 'no');
+        if (o.ok && !st.stamps[j.id]) {
+          st.stamps[j.id] = true; saveNow();
+          box.classList.add('done', 'pop'); box.appendChild(stampMark());
+          var nav = document.querySelector('.mainnav a[href="#passport"]'); if (nav) nav.textContent = '내 여권 ' + count(st.stamps) + '/' + E.jobs.length;
+          toast(j.name + ' 부스 도장을 받았어요!');
+        }
+      } }, o.t));
+    });
+    box.appendChild(list); box.appendChild(fb);
+    if (done) { box.appendChild(stampMark()); fb.textContent = '이미 도장을 받은 부스예요. 다시 풀어 봐도 좋아요.'; }
+    return box;
+  }
+  function viewJob(j) {
+    var z = ZONE[j.zone], list = zoneJobs(j.zone), i = list.indexOf(j), nj = list[(i + 1) % list.length];
+    var main = h('main', { id: 'main', class: 'wrap', tabindex: '-1' });
+    main.appendChild(h('nav', { class: 'crumb', 'aria-label': '위치' }, h('a', { href: '#home' }, '박람회 지도'), ' › ', h('a', { href: '#zone-' + z.id }, z.name), ' › ', j.name));
+    main.appendChild(h('section', { class: 'jobhead z-' + j.zone },
+      h('span', { class: 'awning', 'aria-hidden': 'true' }),
+      h('span', { class: 'bigemoji', 'aria-hidden': 'true' }, j.emoji),
+      h('div', { class: 'jt' }, h('p', { class: 'kicker' }, statusPill(j), j.book ? h('span', { class: 'bookref' }, j.book) : null),
+        h('h1', null, j.name), h('p', { class: 'hookq' }, j.hook))));
+    var know = h('ul', { class: 'know' });
+    j.know.forEach(function (k) { know.appendChild(h('li', null, h('b', null, k[0]), h('span', null, k[1]))); });
+    main.appendChild(h('div', { class: 'jobgrid' },
+      h('section', { class: 'panel' }, h('h2', null, '하는 일'), h('p', null, j.work)),
+      h('section', { class: 'panel' }, h('h2', null, '미래 전망'), h('p', null, j.why)),
+      h('section', { class: 'panel wide' }, h('h2', null, '필요한 과학 지식'), know),
+      h('section', { class: 'panel' }, h('h2', null, '함께 쓰는 미래 기술'), h('p', { class: 'tags' }, j.tech.map(function (t) { return h('span', { class: 'tag' }, t); }))),
+      h('section', { class: 'panel' }, h('h2', null, '이 직업을 꿈꾼다면 지금'), h('p', null, j.start))));
+    main.appendChild(mission(j));
+    main.appendChild(h('p', { class: 'next' }, h('a', { class: 'btn ghost', href: '#zone-' + z.id }, '← ' + z.name), h('a', { class: 'btn', href: '#job-' + nj.id }, '다음 부스: ' + nj.name + ' →')));
+    return main;
+  }
+
+  /* ---------- 화면: 나에게 맞는 부스 ---------- */
+  function viewFind() {
+    var main = h('main', { id: 'main', class: 'wrap narrow', tabindex: '-1' });
+    main.appendChild(h('h1', null, '나에게 맞는 부스 찾기'));
+    main.appendChild(h('p', { class: 'sub' }, '다섯 가지 질문에 답하면 어울리는 부스를 알려 줘요. 재미로 보는 추천이고, 진짜 진로는 여러 경험을 하며 찾아가요.'));
+    var n = st.find.length;
+    if (n < E.find.length) {
+      var item = E.find[n];
+      main.appendChild(h('p', { class: 'dots', role: 'img', 'aria-label': (n + 1) + '번째 질문 / ' + E.find.length }, E.find.map(function (_, i) { return h('span', { class: i < n ? 'on' : i === n ? 'cur' : '' }); })));
+      main.appendChild(h('h2', { class: 'fq' }, (n + 1) + '. ' + item.q));
+      main.appendChild(h('div', { class: 'answers' }, item.a.map(function (a, k) {
+        return h('button', { type: 'button', class: 'ans', onclick: function () { st.find.push(k); saveNow(); route(); } }, a[0]);
+      })));
+      if (n > 0) main.appendChild(h('p', null, h('button', { type: 'button', class: 'btn ghost', onclick: function () { st.find.pop(); save(); route(); } }, '← 이전 질문')));
+      return main;
+    }
+    var score = {};
+    st.find.forEach(function (k, i) { var a = E.find[i] && E.find[i].a[k]; if (a) a[1].forEach(function (t) { score[t] = (score[t] || 0) + 1; }); });
+    var ranked = E.jobs.map(function (j) {
+      var s = 0, why = [];
+      j.tags.forEach(function (t) { if (score[t]) { s += score[t]; why.push(E.tagNames[t]); } });
+      return { j: j, s: s, why: why };
+    }).sort(function (a, b) { return b.s - a.s || E.jobs.indexOf(a.j) - E.jobs.indexOf(b.j); }).slice(0, 3);
+    var top = Object.keys(score).sort(function (a, b) { return score[b] - score[a]; }).slice(0, 2).map(function (t) { return E.tagNames[t]; });
+    main.appendChild(h('div', { class: 'result' }, h('p', { class: 'kicker' }, '나의 관심 · ' + (top.join(', ') || '여러 분야')), h('h2', null, '이런 부스가 어울려요')));
+    var grid = h('div', { class: 'booths' });
+    ranked.forEach(function (r) { var c = boothCard(r.j); c.appendChild(h('span', { class: 'why' }, '어울리는 까닭: ' + r.why.join(', '))); grid.appendChild(c); });
+    main.appendChild(grid);
+    main.appendChild(h('p', { class: 'next' }, h('button', { type: 'button', class: 'btn ghost', onclick: function () { st.find = []; save(); route(); } }, '처음부터 다시 하기'), h('a', { class: 'btn', href: '#maker' }, '나만의 부스 만들기 →')));
+    return main;
+  }
+
+  /* ---------- 화면: 여권 ---------- */
+  function viewPassport() {
+    var main = h('main', { id: 'main', class: 'wrap', tabindex: '-1' });
+    var n = count(st.stamps);
+    main.appendChild(h('section', { class: 'passhead' }, h('p', { class: 'kicker' }, 'FUTURE JOB EXPO 2045'), h('h1', null, '내 박람회 여권'), h('p', { class: 'sub' }, '도장 ' + n + '개 / ' + E.jobs.length + '개 · 부스의 도장 미션을 풀면 도장이 찍혀요.')));
+    var zonesDone = E.zones.filter(function (z) { return zoneJobs(z.id).some(function (j) { return st.stamps[j.id]; }); }).length;
+    var badges = [
+      ['첫 도장', n >= 1, '도장 1개'], ['박람회 한 바퀴', zonesDone === E.zones.length, '네 존에서 도장 1개씩'],
+      ['탐구 박사', n >= 12, '도장 12개'], ['박람회 완주', n === E.jobs.length, '모든 부스 도장']
+    ].concat(E.zones.map(function (z) { return [z.name + ' 마스터', zoneJobs(z.id).every(function (j) { return st.stamps[j.id]; }), z.name + ' 도장 6개']; }));
+    main.appendChild(h('section', { 'aria-labelledby': 'bd-t' }, h('h2', { id: 'bd-t' }, '배지'), h('ul', { class: 'badges' }, badges.map(function (b) {
+      return h('li', { class: b[1] ? 'got' : '' }, h('span', { class: 'bi', 'aria-hidden': 'true' }, b[1] ? '★' : '☆'), h('b', null, b[0]), h('span', null, b[1] ? '받았어요' : b[2]));
+    }))));
+    E.zones.forEach(function (z) {
+      main.appendChild(h('section', { class: 'pzone z-' + z.id, 'aria-label': z.name }, h('h2', null, z.icon + ' ' + z.name), h('div', { class: 'slots' }, zoneJobs(z.id).map(function (j) {
+        var got = !!st.stamps[j.id];
+        return h('a', { class: 'slot' + (got ? ' got' : ''), href: '#job-' + j.id, 'aria-label': j.name + (got ? ' 도장 받음' : ' 도장 아직') }, h('span', { class: 'se', 'aria-hidden': 'true' }, got ? j.emoji : '?'), h('span', { class: 'sn' }, j.name));
+      }))));
+    });
+    var conf = h('div', { class: 'confirm', hidden: true }, h('span', null, '도장과 추천 결과, 만든 부스를 모두 지울까요?'),
+      h('button', { type: 'button', class: 'btn small', onclick: function () { st = fresh(); save(); route(); toast('모두 지웠어요.'); } }, '모두 지우기'),
+      h('button', { type: 'button', class: 'btn small ghost', onclick: function () { conf.hidden = true; } }, '그만두기'));
+    main.appendChild(h('p', { class: 'next' }, h('button', { type: 'button', class: 'btn ghost', onclick: function () { conf.hidden = false; } }, '여권 초기화')));
+    main.appendChild(conf);
+    return main;
+  }
+
+  /* ---------- 화면: 나만의 부스 만들기 ---------- */
+  function viewMaker() {
+    var m = st.maker;
+    var main = h('main', { id: 'main', class: 'wrap', tabindex: '-1' });
+    main.appendChild(h('h1', null, '나만의 미래 직업 부스 만들기'));
+    main.appendChild(h('p', { class: 'sub' }, '교과서 96~97쪽 · 실험관찰 60~61쪽. 미래 사회의 문제와 미래 기술을 섞어 새로운 직업을 상상하고, 직업명·하는 일·미래 전망이 담긴 소개 카드를 만들어요.'));
+    var mix = h('section', { class: 'panel mixer', 'aria-labelledby': 'mx-t' }, h('h2', { id: 'mx-t' }, '1. 아이디어 섞기'));
+    function pick(id, label, list, key) {
+      var s = h('select', { id: id }, h('option', { value: '' }, '고르기'));
+      list.forEach(function (x) { var o = h('option', { value: x }, x); if (m[key] === x) o.selected = true; s.appendChild(o); });
+      s.addEventListener('change', function () { m[key] = s.value; save(); prompt(); paint(); });
+      return h('label', { class: 'fld', for: id }, h('span', null, label), s);
+    }
+    var promptEl = h('p', { class: 'mixq', 'aria-live': 'polite' });
+    function prompt() {
+      promptEl.textContent = m.problem && m.tech
+        ? '"' + m.tech + '" 기술로 "' + m.problem + '" 문제를 해결하는 사람이 있다면, 그 사람은 어떤 일을 할까요? 이름도 지어 주세요.'
+        : '두 가지를 고르거나 주사위를 굴려 보세요. 교과서 예: 드론·에어 택시 + 도시 교통 → 도심 항공 교통관제사';
+    }
+    mix.appendChild(h('div', { class: 'mixrow' }, pick('mp', '미래 사회의 문제', E.problems, 'problem'), h('span', { class: 'plus', 'aria-hidden': 'true' }, '+'), pick('mt', '미래 기술', E.techs, 'tech'),
+      h('button', { type: 'button', class: 'btn', onclick: function () {
+        m.problem = E.problems[Math.floor(Math.random() * E.problems.length)]; m.tech = E.techs[Math.floor(Math.random() * E.techs.length)];
+        document.getElementById('mp').value = m.problem; document.getElementById('mt').value = m.tech; save(); prompt(); paint();
+      } }, '🎲 주사위')));
+    prompt(); mix.appendChild(promptEl);
+    main.appendChild(mix);
+    var form = h('section', { class: 'panel', 'aria-labelledby': 'fm-t' }, h('h2', { id: 'fm-t' }, '2. 부스 소개 쓰기'));
+    function field(key, label, ph, multi) {
+      var id = 'mk-' + key, el = multi ? h('textarea', { id: id, rows: 3, placeholder: ph }) : h('input', { id: id, type: 'text', placeholder: ph, maxlength: 40 });
+      el.value = m[key] || '';
+      el.addEventListener('input', function () { m[key] = el.value; save(); paint(); });
+      return h('label', { class: 'fld', for: id }, h('span', null, label), el);
+    }
+    var emo = h('div', { class: 'emos', role: 'group', 'aria-label': '부스 그림 고르기' });
+    E.emojis.forEach(function (e) {
+      emo.appendChild(h('button', { type: 'button', class: 'emo', 'aria-pressed': m.emoji === e ? 'true' : 'false', 'aria-label': '그림 ' + e, onclick: function (ev) {
+        m.emoji = e; save(); Array.prototype.forEach.call(emo.children, function (b) { b.setAttribute('aria-pressed', 'false'); }); ev.currentTarget.setAttribute('aria-pressed', 'true'); paint();
+      } }, e));
+    });
+    form.appendChild(field('name', '직업명', '예: 도심 항공 교통관제사'));
+    form.appendChild(h('div', { class: 'fld' }, h('span', null, '부스 그림'), emo));
+    form.appendChild(field('work', '하는 일', '누구를 위해, 어떤 기술로, 무엇을 하나요?', true));
+    form.appendChild(field('why', '미래 전망', '어떤 변화 때문에 이 직업이 필요해질까요?', true));
+    form.appendChild(field('know', '필요한 과학 지식', '예: 날씨, 소리의 성질'));
+    form.appendChild(field('team', '만든 모둠', '모둠 이름이나 별명 (실명은 쓰지 않아요)'));
+    main.appendChild(form);
+    var card = h('div', { class: 'mycard', id: 'mycard' });
+    var acts = h('div', { class: 'row' },
+      h('button', { type: 'button', class: 'btn', onclick: saveCard }, '카드 이미지로 저장'),
+      h('button', { type: 'button', class: 'btn ghost', onclick: copyCard }, '글로 복사하기'));
+    main.appendChild(h('section', { class: 'panel', 'aria-labelledby': 'pv-t' }, h('h2', { id: 'pv-t' }, '3. 미리 보기와 저장'), card, acts, h('div', { id: 'savebox' })));
+    main.appendChild(h('section', { class: 'panel', 'aria-labelledby': 'sh-t' }, h('h2', { id: 'sh-t' }, '4. 공유하고 댓글 달기'),
+      h('p', null, '저장한 카드를 반 공유 플랫폼에 올리고, 다른 모둠의 부스에 댓글을 달아요. 좋은 댓글은 칭찬 + 질문 + 제안으로 이루어져요.'),
+      h('ul', { class: 'starters' }, h('li', null, h('b', null, '칭찬 '), '~한 점이 새로웠어요.'), h('li', null, h('b', null, '질문 '), '~할 때는 어떻게 하나요?'), h('li', null, h('b', null, '제안 '), '~도 하면 더 좋겠어요.')),
+      h('p', { class: 'guard' }, '학습 지킴이 · 나와 다른 사람의 개인 정보를 보호해요. 댓글은 바르고 고운 말로 써요.')));
+    function paint() {
+      card.textContent = '';
+      card.appendChild(h('span', { class: 'awning', 'aria-hidden': 'true' }));
+      card.appendChild(h('span', { class: 'bigemoji', 'aria-hidden': 'true' }, m.emoji || '🤖'));
+      card.appendChild(h('p', { class: 'cn' }, m.name || '직업명'));
+      if (m.problem || m.tech) card.appendChild(h('p', { class: 'cmix' }, [m.problem, m.tech].filter(Boolean).join(' × ')));
+      [['하는 일', m.work], ['미래 전망', m.why], ['필요한 과학 지식', m.know]].forEach(function (r) { card.appendChild(h('div', { class: 'cs' }, h('b', null, r[0]), h('p', null, r[1] || '아직 쓰지 않았어요.'))); });
+      card.appendChild(h('p', { class: 'cf' }, '미래 직업 박람회 2045' + (m.team ? ' · ' + m.team : '')));
+    }
+    paint();
+    return main;
+  }
+  function cardText() {
+    var m = st.maker;
+    return ['[미래 직업 소개] ' + (m.name || '(직업명)'), m.problem || m.tech ? '아이디어: ' + [m.problem, m.tech].filter(Boolean).join(' × ') : '', '하는 일: ' + (m.work || ''), '미래 전망: ' + (m.why || ''), '필요한 과학 지식: ' + (m.know || ''), m.team ? '만든 모둠: ' + m.team : ''].filter(Boolean).join('\n');
+  }
+  function copyCard() {
+    var text = cardText(), box = document.getElementById('savebox');
+    function fail() { box.textContent = ''; var ta = h('textarea', { rows: 6, readonly: true, 'aria-label': '복사할 글' }); ta.value = text; box.appendChild(ta); ta.select(); toast('선택된 글을 복사해 주세요.'); }
+    try { navigator.clipboard.writeText(text).then(function () { toast('복사했어요.'); }, fail); } catch (e) { fail(); }
+  }
+
+  /* ---------- 카드 이미지 ---------- */
+  function wrapLines(ctx, text, width, maxLines) {
+    var lines = [], line = '';
+    String(text || '').split(/\s+/).forEach(function (word) {
+      var test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width <= width) { line = test; return; }
+      if (line) lines.push(line);
+      if (ctx.measureText(word).width <= width) { line = word; return; }
+      line = '';
+      Array.from(word).forEach(function (ch) { if (ctx.measureText(line + ch).width > width) { lines.push(line); line = ch; } else line += ch; });
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) { lines = lines.slice(0, maxLines); lines[maxLines - 1] = lines[maxLines - 1].replace(/.$/, '') + '…'; }
+    return lines;
+  }
+  function drawCard() {
+    var m = st.maker, W = 1080, H = 1350, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var x = c.getContext('2d');
+    var disp = '"Black Han Sans", "Jua", "Malgun Gothic", sans-serif', body = '"IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+    x.fillStyle = '#13285A'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#FFFFFF'; roundRect(x, 50, 50, W - 100, H - 100, 44); x.fill();
+    x.save(); roundRect(x, 50, 50, W - 100, H - 100, 44); x.clip();
+    for (var i = 0; i < 12; i++) {
+      x.fillStyle = i % 2 ? '#FDE6E0' : '#D9472F';
+      x.fillRect(50 + i * 82, 50, 82, 110);
+      x.beginPath(); x.arc(91 + i * 82, 160, 41, 0, Math.PI); x.fill();
+    }
+    x.restore();
+    x.beginPath(); x.fillStyle = '#F1F5FB'; x.arc(W / 2, 360, 120, 0, Math.PI * 2); x.fill();
+    x.font = '130px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText(m.emoji || '🤖', W / 2, 368);
+    x.fillStyle = '#13285A'; x.textBaseline = 'alphabetic'; x.font = '76px ' + disp;
+    var title = wrapLines(x, m.name || '나의 미래 직업', W - 220, 2), y = 580;
+    title.forEach(function (l) { x.fillText(l, W / 2, y); y += 88; });
+    if (m.problem || m.tech) { x.font = '34px ' + body; x.fillStyle = '#4A5A78'; x.fillText([m.problem, m.tech].filter(Boolean).join(' × '), W / 2, y - 18); y += 40; }
+    x.textAlign = 'left';
+    [['하는 일', m.work], ['미래 전망', m.why], ['필요한 과학 지식', m.know]].forEach(function (r) {
+      if (y > H - 220) return;
+      x.fillStyle = '#D9472F'; x.font = '38px ' + disp; x.fillText(r[0], 110, y + 30); y += 70;
+      x.fillStyle = '#0F1E3D'; x.font = '36px ' + body;
+      wrapLines(x, r[1] || '-', W - 220, r[0] === '필요한 과학 지식' ? 2 : 3).forEach(function (l) { x.fillText(l, 110, y); y += 52; });
+      y += 18;
+    });
+    x.textAlign = 'center'; x.fillStyle = '#4A5A78'; x.font = '30px ' + body;
+    x.fillText('미래 직업 박람회 2045' + (m.team ? ' · ' + m.team : ''), W / 2, H - 95);
+    return c;
+  }
+  function roundRect(x, l, t, w, hh, r) { x.beginPath(); x.moveTo(l + r, t); x.arcTo(l + w, t, l + w, t + hh, r); x.arcTo(l + w, t + hh, l, t + hh, r); x.arcTo(l, t + hh, l, t, r); x.arcTo(l, t, l + w, t, r); x.closePath(); }
+  function saveCard() {
+    var box = document.getElementById('savebox');
+    var m = st.maker, txt = [m.name, m.work, m.why, m.know, m.team, m.problem, m.tech, '하는 일 미래 전망 필요한 과학 지식 나의 미래 직업 박람회 2045 ×'].join(' ');
+    var ready = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('76px "Black Han Sans"', txt), document.fonts.load('36px "IBM Plex Sans KR"', txt)]).catch(function () {}) : Promise.resolve();
+    ready.then(function () {
+      var canvas = drawCard(), name = 'future-job-card.png';
+      canvas.toBlob(function (blob) {
+        if (!blob) { toast('이미지를 만들지 못했어요.'); return; }
+        var cl = window.claude;
+        var viaHost = cl && typeof cl.use === 'function' ? cl.use('downloads').catch(function () { return null; }) : Promise.resolve(null);
+        viaHost.then(function (dl) {
+          if (dl) return dl.save({ filename: name, data: blob }).then(function () { toast('카드를 저장했어요.'); }, function (e) { if (!e || e.code !== 'declined') showImage(canvas, box); });
+          try {
+            var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+            toast('카드를 저장했어요. 저장이 안 되면 아래 그림을 길게 눌러 저장하세요.');
+          } catch (e) { /* 아래 그림으로 대신 */ }
+          showImage(canvas, box);
+        });
+      }, 'image/png');
+    });
+  }
+  function showImage(canvas, box) {
+    box.textContent = '';
+    box.appendChild(h('p', { class: 'sub' }, '저장되지 않으면 이 그림을 길게 누르거나 오른쪽 클릭해 저장하세요.'));
+    box.appendChild(h('img', { src: canvas.toDataURL('image/png'), alt: '내가 만든 미래 직업 소개 카드', class: 'cardimg' }));
+  }
+
+  /* ---------- 화면: 선생님용 안내 ---------- */
+  function viewGuide() {
+    var main = h('main', { id: 'main', class: 'wrap narrow guide', tabindex: '-1' });
+    main.appendChild(h('h1', null, '선생님용 안내'));
+    var rows = [
+      ['1~2차시 · 교과서 84~87쪽', '존 입구', '지금의 모습 → 일어날 수 있는 문제 → 과학이 돕는 방법(원인 줄이기·변화에 대처하기)을 읽고 존에 들어가요.'],
+      ['3차시 · 교과서 88~91쪽', '부스와 도장 미션', '직업마다 과학 지식과, 곤란한 상황을 푸는 과학적 탐구 과정이 있어요. 도장 미션은 "한 가지 조건만 다르게 하기"를 고르는 문제예요.'],
+      ['4차시 · 교과서 92~93쪽', '나에게 맞는 부스, 지금 해 볼 일', '관심에서 출발해 직업을 고르고, 미래 기술과 "지금 해 볼 일"을 나의 진로와 이어요.'],
+      ['창의가 팡팡 · 교과서 96~97쪽, 실험관찰 60~61쪽', '나만의 부스 만들기', '문제 × 기술로 직업을 상상하고 직업명·하는 일·미래 전망 카드를 저장해 공유 플랫폼에 올리고 댓글을 달아요.']
+    ];
+    main.appendChild(h('div', { class: 'tablewrap' }, h('table', null, h('thead', null, h('tr', null, h('th', null, '교과서 흐름'), h('th', null, '사이트'), h('th', null, '하는 일'))),
+      h('tbody', null, rows.map(function (r) { return h('tr', null, r.map(function (c) { return h('td', null, c); })); })))));
+    main.appendChild(h('h2', null, '수업 아이디어'));
+    main.appendChild(h('ul', null,
+      h('li', null, '모둠마다 존 하나를 맡아 부스 6곳의 도장을 모으고, 존 입구의 "문제 → 과학" 흐름을 발표해요.'),
+      h('li', null, '개인별로 "도장 6개 모으기" 미션을 주고, 가장 마음에 든 부스의 과학 지식과 탐구 과정을 실험관찰에 정리해요.'),
+      h('li', null, '창의가 팡팡 시간에 카드를 저장해 패들렛 같은 공유 플랫폼에 올리고, 칭찬·질문·제안 댓글을 달아요.')));
+    main.appendChild(h('h2', null, '알아 둘 점'));
+    main.appendChild(h('ul', null,
+      h('li', null, '부스 24곳의 내용은 초등학생 눈높이로 쉽게 쓴 것이고, 통계나 전망 수치는 넣지 않았어요. "지금 있어요 / 자라나는 중 / 상상 직업"은 2026년 기준 제작자의 분류예요.'),
+      h('li', null, '"나에게 맞는 부스"는 고른 답의 관심 분야로 고르는 재미용 추천이에요. 검사 도구가 아니에요.'),
+      h('li', null, '도장, 추천 결과, 만든 부스는 학생 기기의 브라우저에만 저장되고 선생님께 모이지 않아요. 여럿이 쓰는 기기는 여권 화면에서 초기화하세요.'),
+      h('li', null, '카드에는 실명 대신 모둠 이름이나 별명을 쓰도록 안내해 주세요.')));
+    return main;
+  }
+
+  /* ---------- 길 찾기 ---------- */
+  var lastKey = null;
+  function route() {
+    var hash = (location.hash || '#home').slice(1), view, key = hash;
+    if (hash === 'map' || hash === 'home' || !hash) { view = viewHome(); key = 'home'; }
+    else if (hash.indexOf('zone-') === 0 && ZONE[hash.slice(5)]) view = viewZone(ZONE[hash.slice(5)]);
+    else if (hash.indexOf('job-') === 0 && JOB[hash.slice(4)]) view = viewJob(JOB[hash.slice(4)]);
+    else if (hash === 'find') view = viewFind();
+    else if (hash === 'maker') view = viewMaker();
+    else if (hash === 'passport') view = viewPassport();
+    else if (hash === 'guide') view = viewGuide();
+    else { view = viewHome(); key = 'home'; }
+    var root = document.getElementById('app');
+    root.textContent = '';
+    root.appendChild(header()); root.appendChild(view); root.appendChild(footer());
+    root.appendChild(h('div', { id: 'toast', class: 'toast', role: 'status', hidden: true }));
+    document.title = '미래 직업 박람회 2045';
+    if (hash === 'map') { var mp = document.getElementById('map'); if (mp) mp.scrollIntoView(); }
+    else if (key !== lastKey) window.scrollTo(0, 0);
+    if (key !== lastKey) {
+      if (lastKey !== null) { var t = document.getElementById('main'); if (t) { try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } } }
+    }
+    lastKey = key;
+  }
+  function boot() { document.documentElement.lang = 'ko'; window.addEventListener('hashchange', route); route(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+</body>
+</html>
